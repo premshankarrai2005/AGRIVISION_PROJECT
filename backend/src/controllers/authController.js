@@ -31,7 +31,6 @@ const registerUser = async (req, res) => {
       token: generateToken(user._id),
       user,
     });
-
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -41,7 +40,6 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
@@ -52,10 +50,7 @@ const loginUser = async (req, res) => {
       });
     }
 
-    const match = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const match = await bcrypt.compare(password, user.password);
 
     if (!match) {
       return res.status(401).json({
@@ -68,7 +63,6 @@ const loginUser = async (req, res) => {
       token: generateToken(user._id),
       user,
     });
-
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -76,7 +70,15 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  getProfile,
 };
