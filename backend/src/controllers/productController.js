@@ -12,6 +12,27 @@ const addProduct = async (req, res) => {
       image,
     } = req.body;
 
+    if (!name || !category || !quantity || !price || !location) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all required fields",
+      });
+    }
+
+    if (price <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Price must be greater than 0",
+      });
+    }
+
+    if (quantity <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Quantity must be greater than 0",
+      });
+    }
+
     const product = await Product.create({
       farmer: req.user._id,
       name,
@@ -27,6 +48,7 @@ const addProduct = async (req, res) => {
       success: true,
       product,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -37,16 +59,50 @@ const addProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate(
-      "farmer",
-      "name email"
-    );
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 5;
+    const skip = (page - 1) * limit;
+
+    let filter = {};
+
+    if (req.query.category) {
+      filter.category = req.query.category;
+    }
+
+    if (req.query.search) {
+      filter.name = {
+        $regex: req.query.search,
+        $options: "i",
+      };
+    }
+
+    let sort = {};
+
+    if (req.query.sort === "price") {
+      sort.price = 1;
+    } else if (req.query.sort === "-price") {
+      sort.price = -1;
+    } else {
+      sort.createdAt = -1;
+    }
+
+    const products = await Product.find(filter)
+      .populate("farmer", "name")
+      .sort(sort)
+      .skip(skip)
+      .limit(limit);
+
+    const totalProducts = await Product.countDocuments(filter);
 
     res.json({
       success: true,
-      count: products.length,
+      page,
+      totalPages: Math.ceil(totalProducts / limit),
+      totalProducts,
       products,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
