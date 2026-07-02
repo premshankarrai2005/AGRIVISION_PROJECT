@@ -49,10 +49,18 @@ const productSchema = new mongoose.Schema(
       enum: ["available", "out_of_stock"],
       default: "available",
     },
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+    totalReviews: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 module.exports = mongoose.model("Product", productSchema);
