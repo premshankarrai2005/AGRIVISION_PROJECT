@@ -1,4 +1,5 @@
 const express = require("express");
+const upload = require("../middleware/upload");
 
 const {
   addProduct,
@@ -18,6 +19,7 @@ router.post(
   "/",
   protect,
   authorize("farmer"),
+  upload.single("image"),
   addProduct
 );
 

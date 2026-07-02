@@ -20,9 +20,15 @@ app.use("/api/health", healthRoute);
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
-app.use("/api/admin", adminRoutes);  
+app.use("/api/admin", adminRoutes);
 
+app.use((err, req, res, next) => {
+  console.error(err);
 
+  res.status(500).json({
+    success: false,
+    message: err.message,
+  });
+});
 
-
-module.exports = app;  
+module.exports = app;

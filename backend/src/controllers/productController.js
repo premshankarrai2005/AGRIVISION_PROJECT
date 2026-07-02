@@ -2,15 +2,8 @@ const Product = require("../models/Product");
 
 const addProduct = async (req, res) => {
   try {
-    const {
-      name,
-      category,
-      quantity,
-      price,
-      location,
-      description,
-      image,
-    } = req.body;
+    const { name, category, quantity, price, location, description } = req.body;
+    const image = req.file ? req.file.path : "";
 
     if (!name || !category || !quantity || !price || !location) {
       return res.status(400).json({
@@ -48,7 +41,6 @@ const addProduct = async (req, res) => {
       success: true,
       product,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -59,7 +51,6 @@ const addProduct = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 5;
     const skip = (page - 1) * limit;
@@ -102,7 +93,6 @@ const getAllProducts = async (req, res) => {
       totalProducts,
       products,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -134,7 +124,7 @@ const getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate(
       "farmer",
-      "name email"
+      "name email",
     );
 
     if (!product) {
@@ -180,7 +170,7 @@ const updateProduct = async (req, res) => {
       {
         new: true,
         runValidators: true,
-      }
+      },
     );
 
     res.status(200).json({
