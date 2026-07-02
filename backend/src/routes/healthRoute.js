@@ -3,9 +3,11 @@ const express = require("express");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.json({
+  res.status(200).json({
     success: true,
-    message: "FarmLink API Healthy"
+    message: "AgriVision AI Backend Running",
+    uptime: process.uptime(),
+    timestamp: new Date(),
   });
 });
 
