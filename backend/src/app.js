@@ -65,13 +65,13 @@ app.use((err, req, res, next) => {
     success: false,
     message: err.message || "Internal Server Error",
   });
-});
+}); 
 
 app.use((req, res) => {
   res.status(404).json({
     success: false,
     message: "Route Not Found",
   });
-}); 
+});   
 
 module.exports = app;
