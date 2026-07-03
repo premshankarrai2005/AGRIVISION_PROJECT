@@ -2,7 +2,7 @@ import LoginForm from "@/components/forms/LoginForm";
 
 export default function LoginPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-green-100 via-white to-green-200 p-6">
+    <main className="flex min-h-screen items-center justify-center bg-linear-to-br from-green-100 via-white to-green-200 p-6">
       <div className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white p-10 shadow-2xl">
         <h1 className="mb-2 text-center text-4xl font-bold text-green-700">
           🌾 FarmLink AI
