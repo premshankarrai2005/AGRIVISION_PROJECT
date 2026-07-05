@@ -33,6 +33,9 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    harvestDate: {
+      type: Date,
+    },
 
     description: {
       type: String,

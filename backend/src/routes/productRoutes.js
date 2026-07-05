@@ -20,32 +20,23 @@ router.post(
   protect,
   authorize("farmer"),
   upload.single("image"),
-  addProduct
+  addProduct,
 );
 
 router.get("/", getAllProducts);
 
-router.get(
-  "/my-products",
-  protect,
-  authorize("farmer"),
-  getMyProducts
-);
+router.get("/my-products", protect, authorize("farmer"), getMyProducts); 
 
-router.get("/:id", getProductById);
+router.get("/:id", getProductById); 
 
 router.put(
   "/:id",
   protect,
   authorize("farmer"),
-  updateProduct
-);
+  upload.single("image"),
+  updateProduct,
+);  
 
-router.delete(
-  "/:id",
-  protect,
-  authorize("farmer"),
-  deleteProduct
-);
+router.delete("/:id", protect, authorize("farmer"), deleteProduct);
 
-module.exports = router;
+module.exports = router; 
