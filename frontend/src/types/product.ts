@@ -26,10 +26,12 @@ export interface ProductFormData {
   category: string;
 
   price: number;
+  
+  location: string;
 
   quantity: number;
 
-  image: string;
+  image?: File | null;
 }
 
 export interface Farmer {

@@ -164,13 +164,21 @@ const updateProduct = async (req, res) => {
       });
     }
 
+    const updateData = {
+      ...req.body,
+    };
+
+    if (req.file) {
+      updateData.image = req.file.path;
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       {
         new: true,
         runValidators: true,
-      },
+      }
     );
 
     res.status(200).json({

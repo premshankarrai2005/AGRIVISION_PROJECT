@@ -1,13 +1,3 @@
-// getProducts()
-
-// getProductById(id)
-
-// createProduct(data)
-
-// updateProduct(id,data)
-
-// deleteProduct(id)
-
 import api from "@/lib/api";
 import {
   Product,
@@ -17,9 +7,7 @@ import {
 } from "@/types/product";
 
 /*
-|--------------------------------------------------------------------------
 | Get Logged-in Farmer Products
-|--------------------------------------------------------------------------
 */
 
 export const getMyProducts = async (): Promise<Product[]> => {
@@ -31,9 +19,7 @@ export const getMyProducts = async (): Promise<Product[]> => {
 };
 
 /*
-|--------------------------------------------------------------------------
 | Get All Products
-|--------------------------------------------------------------------------
 */
 
 export const getAllProducts = async (): Promise<ProductResponse> => {
@@ -44,9 +30,7 @@ export const getAllProducts = async (): Promise<ProductResponse> => {
 };
 
 /*
-|--------------------------------------------------------------------------
 | Get Product By ID
-|--------------------------------------------------------------------------
 */
 
 export const getProductById = async (
@@ -61,9 +45,7 @@ export const getProductById = async (
 };
 
 /*
-|--------------------------------------------------------------------------
 | Delete Product
-|--------------------------------------------------------------------------
 */
 
 export const deleteProduct = async (
@@ -78,9 +60,7 @@ export const deleteProduct = async (
 };
 
 /*
-|--------------------------------------------------------------------------
 | Create Product
-|--------------------------------------------------------------------------
 */
 
 export const createProduct = async (
@@ -100,18 +80,16 @@ export const createProduct = async (
 };
 
 /*
-|--------------------------------------------------------------------------
 | Update Product
-|--------------------------------------------------------------------------
 */
 
 export const updateProduct = async (
   id: string,
-  data: FormData
+  formData: FormData
 ) => {
   const response = await api.put(
     `/products/${id}`,
-    data,
+    formData,
     {
       headers: {
         "Content-Type": "multipart/form-data",

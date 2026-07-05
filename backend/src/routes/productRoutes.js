@@ -34,7 +34,7 @@ router.put(
   protect,
   authorize("farmer"),
   upload.single("image"),
-  updateProduct,
+  updateProduct
 );  
 
 router.delete("/:id", protect, authorize("farmer"), deleteProduct);
