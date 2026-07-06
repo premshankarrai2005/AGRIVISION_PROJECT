@@ -103,14 +103,64 @@ const getAllProducts = async (req, res) => {
 
 const getMyProducts = async (req, res) => {
   try {
-    const products = await Product.find({
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 6;
+    const skip = (page - 1) * limit;
+
+    const filter = {
       farmer: req.user._id,
-    });
+    };
+
+    // Search
+    if (req.query.search) {
+      filter.name = {
+        $regex: req.query.search,
+        $options: "i",
+      };
+    }
+
+    // Category
+    if (
+      req.query.category &&
+      req.query.category !== "All"
+    ) {
+      filter.category = req.query.category;
+    }
+
+    // Status
+    if (
+      req.query.status &&
+      req.query.status !== "All"
+    ) {
+      filter.status = req.query.status;
+    }
+
+    let sort = {
+      createdAt: -1,
+    };
+
+    if (req.query.sort === "price-asc") {
+      sort = { price: 1 };
+    }
+
+    if (req.query.sort === "price-desc") {
+      sort = { price: -1 };
+    }
+
+    const products = await Product.find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit);
+
+    const totalProducts =
+      await Product.countDocuments(filter);
 
     res.json({
       success: true,
-      count: products.length,
       products,
+      totalProducts,
+      totalPages: Math.ceil(totalProducts / limit),
+      page,
     });
   } catch (error) {
     res.status(500).json({

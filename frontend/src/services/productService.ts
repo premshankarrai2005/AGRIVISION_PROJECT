@@ -10,12 +10,26 @@ import {
 | Get Logged-in Farmer Products
 */
 
-export const getMyProducts = async (): Promise<Product[]> => {
-  const response = await api.get<ProductResponse>(
-    "/products/my-products"
+interface ProductQuery {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+  status?: string;
+  sort?: string;
+}
+
+export const getMyProducts = async (
+  params: ProductQuery = {}
+) => {
+  const response = await api.get(
+    "/products/my-products",
+    {
+      params,
+    }
   );
 
-  return response.data.products;
+  return response.data;
 };
 
 /*
