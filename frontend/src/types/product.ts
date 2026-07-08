@@ -82,6 +82,18 @@ export interface ProductResponse {
   totalProducts?: number;
 }
 
+export interface ProductQuery {
+  page?: number;
+
+  limit?: number;
+
+  search?: string;
+
+  category?: string;
+
+  sort?: string;
+}
+
 export interface SingleProductResponse {
   success: boolean;
 

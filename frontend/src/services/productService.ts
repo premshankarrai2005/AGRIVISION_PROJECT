@@ -36,9 +36,15 @@ export const getMyProducts = async (
 | Get All Products
 */
 
-export const getAllProducts = async (): Promise<ProductResponse> => {
-  const response =
-    await api.get<ProductResponse>("/products");
+export const getAllProducts = async (
+  params: ProductQuery = {}
+) => {
+  const response = await api.get(
+    "/products",
+    {
+      params,
+    }
+  );
 
   return response.data;
 };
@@ -50,10 +56,9 @@ export const getAllProducts = async (): Promise<ProductResponse> => {
 export const getProductById = async (
   id: string
 ): Promise<Product> => {
-  const response =
-    await api.get<SingleProductResponse>(
-      `/products/${id}`
-    );
+  const response = await api.get(
+    `/products/${id}`
+  );
 
   return response.data.product;
 };

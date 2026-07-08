@@ -52,15 +52,15 @@ const addProduct = async (req, res) => {
 const getAllProducts = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 5;
+    const limit = Number(req.query.limit) || 9;
+
     const skip = (page - 1) * limit;
 
-    let filter = {};
+    const filter = {
+      status: "available",
+    };
 
-    if (req.query.category) {
-      filter.category = req.query.category;
-    }
-
+    // Search
     if (req.query.search) {
       filter.name = {
         $regex: req.query.search,
@@ -68,14 +68,29 @@ const getAllProducts = async (req, res) => {
       };
     }
 
-    let sort = {};
+    // Category
+    if (
+      req.query.category &&
+      req.query.category !== "All"
+    ) {
+      filter.category = req.query.category;
+    }
 
-    if (req.query.sort === "price") {
-      sort.price = 1;
-    } else if (req.query.sort === "-price") {
-      sort.price = -1;
-    } else {
-      sort.createdAt = -1;
+    // Price Sorting
+    let sort = {
+      createdAt: -1,
+    };
+
+    if (req.query.sort === "low") {
+      sort = {
+        price: 1,
+      };
+    }
+
+    if (req.query.sort === "high") {
+      sort = {
+        price: -1,
+      };
     }
 
     const products = await Product.find(filter)
@@ -84,14 +99,17 @@ const getAllProducts = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    const totalProducts = await Product.countDocuments(filter);
+    const totalProducts =
+      await Product.countDocuments(filter);
 
     res.json({
       success: true,
-      page,
-      totalPages: Math.ceil(totalProducts / limit),
-      totalProducts,
       products,
+      page,
+      totalPages: Math.ceil(
+        totalProducts / limit
+      ),
+      totalProducts,
     });
   } catch (error) {
     res.status(500).json({

@@ -20,7 +20,7 @@ export default function ProductDetails({product}:Props){
 
             <div>
 
-                <div className="relative w-full h-[500px]">
+                <div className="relative w-full h-125">
 
                     <Image
 

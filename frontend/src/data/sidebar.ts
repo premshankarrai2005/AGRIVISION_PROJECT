@@ -4,6 +4,7 @@ import {
   ShoppingCart,
   User,
   LogOut,
+  Heart,
 } from "lucide-react";
 
 export const sidebarItems = [
@@ -26,6 +27,11 @@ export const sidebarItems = [
     title: "Profile",
     path: "/farmer/profile",
     icon: User,
+  },
+   {
+    title: "Wishlist",
+    path: "/wishlist",
+    icon: Heart,
   },
 ];
 
