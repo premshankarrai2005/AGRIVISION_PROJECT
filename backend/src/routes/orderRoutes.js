@@ -1,17 +1,20 @@
 const express = require("express");
-
-const {
-  placeOrder,
-  getMyOrders,
-  getFarmerOrders,
-  updateOrderStatus,
-  farmerDashboard,
-} = require("../controllers/orderController");
+const router = express.Router();
 
 const { protect } = require("../middleware/authMiddleware");
 const authorize = require("../middleware/roleMiddleware");
 
-const router = express.Router();
+const {
+  placeOrder,
+  getBuyerOrders,
+  getFarmerOrders,
+  getOrderById,
+  updateOrderStatus,
+  cancelOrder,
+  getFarmerDashboard,
+} = require("../controllers/orderController");
+
+// Buyer Routes
 
 router.post(
   "/",
@@ -24,8 +27,19 @@ router.get(
   "/my-orders",
   protect,
   authorize("buyer"),
-  getMyOrders
+  getBuyerOrders
 );
+
+
+
+router.delete(
+  "/:id",
+  protect,
+  authorize("buyer"),
+  cancelOrder
+);
+
+// Farmer Routes
 
 router.get(
   "/farmer-orders",
@@ -42,10 +56,16 @@ router.put(
 );
 
 router.get(
-  "/farmer/dashboard",
+  "/dashboard",
   protect,
   authorize("farmer"),
-  farmerDashboard
+  getFarmerDashboard
+);
+
+router.get(
+  "/:id",
+  protect,
+  getOrderById
 );
 
 module.exports = router;

@@ -28,10 +28,15 @@ export const sidebarItems = [
     path: "/farmer/profile",
     icon: User,
   },
-   {
+  {
     title: "Wishlist",
     path: "/wishlist",
     icon: Heart,
+  },
+  {
+    title: "Cart",
+    path: "/cart",
+    icon: ShoppingCart,
   },
 ];
 
