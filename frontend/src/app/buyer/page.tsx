@@ -1,7 +1,7 @@
-export default function BuyerDashboard() {
-  return (
-    <div className="flex min-h-screen items-center justify-center text-4xl font-bold">
-      🛒 Buyer Dashboard
-    </div>
-  );
+"use client";
+
+import BuyerDashboard from "@/components/dashboard/BuyerDashboard";
+
+export default function BuyerPage() {
+  return <BuyerDashboard />;
 }
