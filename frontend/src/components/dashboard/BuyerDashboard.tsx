@@ -1,75 +1,71 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import BuyerDashboardStats from "./BuyerDashboardStats";
+import WishlistGrid from "@/components/wishlist/WishlistGrid";
+import OrderGrid from "@/components/orders/OrderGrid";
+
+import { getBuyerDashboard } from "@/services/dashboardService";
 
 export default function BuyerDashboard() {
+  const [dashboard, setDashboard] = useState<any>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  const loadDashboard = async () => {
+    try {
+      const data = await getBuyerDashboard();
+
+      setDashboard(data);
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to load dashboard");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  if (loading || !dashboard) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading Buyer Dashboard...
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8">
-
+    <div className="space-y-8 p-8">
       <div>
-        <h1 className="text-4xl font-bold">
-          🛒 Welcome
-        </h1>
+        <h1 className="text-4xl font-bold">Welcome 👋</h1>
 
-        <p className="text-gray-500">
-          Buyer Dashboard
-        </p>
+        <p className="mt-2 text-lg text-gray-500">Buyer Dashboard</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <BuyerDashboardStats
+        cartItems={dashboard.cartItems}
+        wishlistItems={dashboard.wishlistItems}
+        totalOrders={dashboard.totalOrders}
+        pendingOrders={dashboard.pendingOrders}
+      />
 
-        <Link
-          href="/products"
-          className="rounded-xl bg-green-100 p-6 shadow"
-        >
-          <h2 className="text-xl font-bold">
-            Browse Products
-          </h2>
+      <div>
+        <h2 className="mb-5 text-2xl font-bold">Recent Orders</h2>
 
-          <p className="mt-2 text-gray-600">
-            Fresh products from farmers
-          </p>
-        </Link>
+        <OrderGrid orders={dashboard.recentOrders} reloadOrders={() => {}} />
+      </div>
 
-        <Link
-          href="/wishlist"
-          className="rounded-xl bg-pink-100 p-6 shadow"
-        >
-          <h2 className="text-xl font-bold">
-            Wishlist
-          </h2>
+      <div>
+        <h2 className="mb-5 text-2xl font-bold">Recommended Products</h2>
 
-          <p className="mt-2 text-gray-600">
-            Saved Products
-          </p>
-        </Link>
-
-        <Link
-          href="/cart"
-          className="rounded-xl bg-blue-100 p-6 shadow"
-        >
-          <h2 className="text-xl font-bold">
-            Cart
-          </h2>
-
-          <p className="mt-2 text-gray-600">
-            Ready to Checkout
-          </p>
-        </Link>
-
-        <Link
-          href="/orders"
-          className="rounded-xl bg-yellow-100 p-6 shadow"
-        >
-          <h2 className="text-xl font-bold">
-            My Orders
-          </h2>
-
-          <p className="mt-2 text-gray-600">
-            Order History
-          </p>
-        </Link>
-
+        <WishlistGrid
+          wishlist={dashboard.recommendedProducts}
+          onRemove={() => {}}
+        />
       </div>
     </div>
   );

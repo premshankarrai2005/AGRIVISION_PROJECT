@@ -1,60 +1,74 @@
 "use client";
 
-import Link from "next/link";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
+import { getAdminDashboard } from "@/services/dashboardService";
+
+import AdminDashboardStats from "./AdminDashboardStats";
+import RecentProducts from "./RecentProducts";
+import RecentUsers from "./RecentUsers";
 
 export default function AdminDashboard() {
+  const [dashboard, setDashboard] = useState<any>(null);
+
+  const [loading, setLoading] = useState(true);
+
+  const loadDashboard = async () => {
+    try {
+      const data = await getAdminDashboard();
+
+      setDashboard(data);
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to load dashboard"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  if (loading || !dashboard) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        Loading Admin Dashboard...
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 p-8">
 
       <div>
         <h1 className="text-4xl font-bold">
-          👑 Welcome
+          Welcome 👋
         </h1>
 
-        <p className="text-gray-500">
+        <p className="mt-2 text-lg text-gray-500">
           Admin Dashboard
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <AdminDashboardStats
+        totalUsers={dashboard.totalUsers}
+        totalFarmers={dashboard.totalFarmers}
+        totalBuyers={dashboard.totalBuyers}
+        totalProducts={dashboard.totalProducts}
+        totalOrders={dashboard.totalOrders}
+        revenue={dashboard.revenue}
+      />
 
-        <Link
-          href="/admin/users"
-          className="rounded-xl bg-blue-100 p-6 shadow"
-        >
-          <h2 className="text-xl font-bold">
-            Users
-          </h2>
-        </Link>
+      <RecentUsers users={dashboard.recentUsers} />
 
-        <Link
-          href="/admin/products"
-          className="rounded-xl bg-green-100 p-6 shadow"
-        >
-          <h2 className="text-xl font-bold">
-            Products
-          </h2>
-        </Link>
+      <RecentProducts
+        products={dashboard.recentProducts}
+      />
 
-        <Link
-          href="/admin/orders"
-          className="rounded-xl bg-yellow-100 p-6 shadow"
-        >
-          <h2 className="text-xl font-bold">
-            Orders
-          </h2>
-        </Link>
-
-        <Link
-          href="/admin/profile"
-          className="rounded-xl bg-purple-100 p-6 shadow"
-        >
-          <h2 className="text-xl font-bold">
-            Profile
-          </h2>
-        </Link>
-
-      </div>
     </div>
   );
 }
