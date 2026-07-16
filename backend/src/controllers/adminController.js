@@ -11,7 +11,6 @@ const getAllUsers = async (req, res) => {
       count: users.length,
       users,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -31,7 +30,6 @@ const getFarmers = async (req, res) => {
       count: farmers.length,
       farmers,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -51,7 +49,6 @@ const getBuyers = async (req, res) => {
       count: buyers.length,
       buyers,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -62,16 +59,13 @@ const getBuyers = async (req, res) => {
 
 const getAllProducts = async (req, res) => {
   try {
-
-    const products = await Product.find()
-      .populate("farmer", "name email");
+    const products = await Product.find().populate("farmer", "name email");
 
     res.json({
       success: true,
       count: products.length,
       products,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -82,17 +76,16 @@ const getAllProducts = async (req, res) => {
 
 const getAllOrders = async (req, res) => {
   try {
-
     const orders = await Order.find()
       .populate("buyer", "name email")
-      .populate("product", "name price");
+      .populate("products.product", "name price image")
+      .populate("products.farmer", "name");
 
     res.json({
       success: true,
       count: orders.length,
       orders,
     });
-
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -103,7 +96,6 @@ const getAllOrders = async (req, res) => {
 
 const adminDashboard = async (req, res) => {
   try {
-
     const totalUsers = await User.countDocuments();
 
     const totalFarmers = await User.countDocuments({
@@ -123,7 +115,7 @@ const adminDashboard = async (req, res) => {
         $group: {
           _id: null,
           totalRevenue: {
-            $sum: "$totalPrice",
+            $sum: "$totalAmount",
           },
         },
       },
@@ -131,26 +123,18 @@ const adminDashboard = async (req, res) => {
 
     res.json({
       success: true,
-      dashboard: {
-        totalUsers,
-        totalFarmers,
-        totalBuyers,
-        totalProducts,
-        totalOrders,
-        totalRevenue:
-          revenue.length > 0
-            ? revenue[0].totalRevenue
-            : 0,
-      },
+      totalUsers,
+      totalFarmers,
+      totalBuyers,
+      totalProducts,
+      totalOrders,
+      revenue: revenue.length > 0 ? revenue[0].totalRevenue : 0,
     });
-
   } catch (error) {
-
     res.status(500).json({
       success: false,
       message: error.message,
     });
-
   }
 };
 

@@ -1,10 +1,7 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-
 import { getAdminDashboard } from "@/services/dashboardService";
-
 import AdminDashboardStats from "./AdminDashboardStats";
 import RecentProducts from "./RecentProducts";
 import RecentUsers from "./RecentUsers";
