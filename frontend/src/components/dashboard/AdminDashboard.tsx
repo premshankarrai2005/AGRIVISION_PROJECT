@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { getAdminDashboard } from "@/services/dashboardService";
@@ -68,4 +69,6 @@ export default function AdminDashboard() {
 
     </div>
   );
-}
+}   
+
+
